@@ -17,23 +17,23 @@
 
 // Defines
 // LED Defines
-#define LEDM20 5
-#define LEDM21 6
-#define LEDM22 7
-#define LEDM23 8
+#define LEDM20 6
+#define LEDM21 7
+#define LEDM22 8
+#define LEDM23 9
 #define LEDM10 17
 #define LEDM11 16
 #define LEDM12 15
 #define LEDH20 14
 #define LEDH21 13
-#define LEDH22 12
-#define LEDH23 2
-#define LEDH10 10
-#define LEDH11 9
+#define LEDH22 2
+#define LEDH23 3
+#define LEDH10 4
+#define LEDH11 5
 // Pushbutton Defines
-#define T1 11
-#define T2 3
-#define T3 4
+#define T1 12 
+#define T2 11 
+#define T3 10 
 
 
 //Variables
