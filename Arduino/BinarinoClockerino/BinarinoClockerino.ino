@@ -1,6 +1,19 @@
 /*
-   Binary clock, shows hours and minutes
-   Adjustable by three buttons
+   Binary clock
+   
+   Shows hours and minutes. Adjustable by three buttons, layout of 
+   leds is in schematics. It usees TinyRTC module but can be modified
+   to run on millis.
+
+   Author: Denis Leskovar
+   Email: dumr666<at>gmail.com
+   Date: 28.1.2018
+
+   Released under MIT Licence.
+
+   Please don't just copy paste the code for your school projects, do your
+   research, it pays off in the long run. If you need any help understanding
+   I am glad to help.
 */
 
 // Includes
@@ -95,10 +108,6 @@ long millisInterval4 = 100;//First number for interval
 //------ Setup Function --------------------------//
 void setup() {
   // Init
-  // Push buttons
-  pinMode(T1, INPUT);
-  pinMode(T2, INPUT);
-  pinMode(T3, INPUT);
   // LED init
   LEDInit();
   //Serial Init
@@ -111,13 +120,10 @@ void setup() {
   }
 
   if (! rtc.isrunning()) {
-    //Serial.println("RTC is NOT running!");
-    //following line sets the RTC to the date & time this sketch was compiled
-    rtc.adjust(DateTime(F(__DATE__), F(__TIME__)));
-    // This line sets the RTC with an explicit date & time, for example to set
-    // January 21, 2014 at 3am you would call :
-    //rtc.adjust(DateTime(2014, 1, 21, 3, 0, 0));
+    Serial.println("RTC is NOT running!");
   }
+  //following line sets the RTC to the date & time this sketch was compiled
+  rtc.adjust(DateTime(F(__DATE__), F(__TIME__)));
 }
 
 //-------- Loop Function --------------------------//
@@ -153,7 +159,8 @@ int millisTasks() {
     millisOld2 = millisNew;
 
     //Tasks for millis 2
-    pushButtonRead();
+    pushButtonRead();   // Read pushbutton states
+    
     // Check for adjust
     if ((stateT1old == LOW) && (stateT1 == HIGH)) {
       if(adjustPlace == 2) {
@@ -168,8 +175,8 @@ int millisTasks() {
       if(adjustPlace == 1) {
         LEDadjustHours = true;
         LEDadjustMinutes = false;
-      }
-      
+      }      
+      // Adjust is made on minutes
       if(adjustPlace == 2) {
         LEDadjustHours = false;
         LEDadjustMinutes = true;
@@ -201,6 +208,7 @@ int millisTasks() {
       }
 
     }
+    // Check if T3 was pressed
     if ((stateT3old == LOW) && (stateT3 == HIGH)) {        // add an hour!
       curr = rtc.now();
       if (adjustPlace == 1 ) {
@@ -225,8 +233,6 @@ int millisTasks() {
         rtc.adjust(DateTime(curr.year(), curr.month(), curr.day(), curr.hour(), adjustMinutes, 0));
 
       }
-
-
     }
     
   }
@@ -235,19 +241,7 @@ int millisTasks() {
     millisOld3 = millisNew;
     
     // Task operations
-    LEDOff = !LEDOff;
-    Serial.print("LEDOFF state: ");
-    Serial.print(LEDOff);
-    Serial.println();
-    Serial.print("Adjust hours state: ");
-    Serial.print(LEDadjustHours);
-    Serial.println();
-    Serial.print("Adjust minutes state: ");
-    Serial.print(LEDadjustMinutes);
-    Serial.println();
-    Serial.print("Adjust place: ");
-    Serial.print(adjustPlace);
-    Serial.println();
+    LEDOff = !LEDOff; // blinking the led if adjusted
   }
   // Task 4 -----------------------------
   if (millisNew - millisOld4 > millisInterval4) {
@@ -292,12 +286,19 @@ void LEDInit() {
   pinMode(LEDH10, OUTPUT);
   pinMode(LEDH11, OUTPUT);
 
+  // Also pushbutton init
+  // Push buttons
+  pinMode(T1, INPUT);
+  pinMode(T2, INPUT);
+  pinMode(T3, INPUT);
+  
   int i = 0;
   int LEDdelay =  100;
   int MinutesIndex = 6;
   int HoursIndex = 5;
 
-  //Hours array
+  // Check if all leds are okay
+  // Hours array
   for (i = 0; i <= HoursIndex; i++)
   {
     digitalWrite(LEDHours[i], HIGH);
@@ -322,11 +323,11 @@ void LEDInit() {
     digitalWrite(LEDMinutes[i], LOW);
     delay(LEDdelay);
   }
-
-  //  Serial.println("LED Init Finished");
+  Serial.println("LED Init Finished");
 }
 
 void LEDReset() {
+  // Reset all leds, before write new value
   digitalWrite(LEDM20, LOW);
   digitalWrite(LEDM21, LOW);
   digitalWrite(LEDM22, LOW);
@@ -352,6 +353,7 @@ void LEDClkShow() {
   currMinutesL = currMinutes % 10;
   LEDReset();
   //SET LEDS
+  // Code is quite self explanatory
   //minutes units
   if (LEDadjustMinutes == false || (LEDadjustMinutes == true && LEDOff == false)) {
     if (currMinutesL == 1 || currMinutesL == 3 || currMinutesL == 5 || currMinutesL == 7 || currMinutesL == 9) {
