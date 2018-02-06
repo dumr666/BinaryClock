@@ -20,7 +20,7 @@
 // Date and time functions using a DS1307 RTC connected via I2C and Wire lib
 #include <Time.h>
 #include <Wire.h>
-#include "RTClib.h"
+#include <RTClib.h>
 
 #if defined(ARDUINO_ARCH_SAMD)
 // for Zero, output on USB Serial console, remove line below if using programming port to program the Zero!
@@ -66,7 +66,6 @@ int LEDHours[] = {LEDH11, LEDH10, LEDH23, LEDH22, LEDH21, LEDH20};
 //RTC Module
 RTC_DS1307 rtc;
 DateTime curr;
-tmElements_t tm;
 char daysOfTheWeek[7][12] = {"Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"};
 int adjustPlace = 0;
 int adjustYear = 0;
