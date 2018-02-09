@@ -425,7 +425,7 @@ void LEDClkShow() {
     if (currHour >= 20 && currHour < 24)  {
       digitalWrite(LEDH11, HIGH);
     } else {
-      digitalWrite(11, LOW);
+      digitalWrite(LEDH11, LOW);
     }
   }
 }
